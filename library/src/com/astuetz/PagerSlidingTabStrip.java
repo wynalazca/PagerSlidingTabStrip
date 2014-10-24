@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2013 Andreas Stuetz <andreas.stuetz@gmail.com>
+ * Copyright (C) 2014 Webber Robots, ltd <webber.robots@gmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,22 +74,23 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 	private Paint rectPaint;
 	private Paint dividerPaint;
 
-	private int indicatorColor = 0xFF666666;
-	private int underlineColor = 0x1A000000;
+	private int indicatorColor = 0xFFEEEEEE;
+	private int underlineColor = 0xFFEEEEEE;
 	private int dividerColor = 0x1A000000;
 
 	private boolean shouldExpand = false;
 	private boolean textAllCaps = true;
 
-	private int scrollOffset = 52;
-	private int indicatorHeight = 8;
-	private int underlineHeight = 2;
+	private int scrollOffset = 160;
+	private int indicatorHeight = 3;
+	private int underlineHeight = 0;
 	private int dividerPadding = 12;
 	private int tabPadding = 24;
 	private int dividerWidth = 1;
 
 	private int tabTextSize = 12;
-	private int tabTextColor = 0xFF666666;
+	private int tabTextColor = 0x33666666;
+	private int selectedTabTextColor = 0xFF666666;
 	private Typeface tabTypeface = null;
 	private int tabTypefaceStyle = Typeface.BOLD;
 
@@ -119,7 +121,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
 		DisplayMetrics dm = getResources().getDisplayMetrics();
 
-		scrollOffset = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, scrollOffset, dm);
+		scrollOffset = dm.widthPixels / 2
 		indicatorHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, indicatorHeight, dm);
 		underlineHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, underlineHeight, dm);
 		dividerPadding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dividerPadding, dm);
@@ -285,16 +287,52 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
 	}
 
+	private void clearSelectedTab()
+	{
+		for (int i = 0; i < tabCount; i++)
+		{
+			View v = tabsContainer.getChildAt(i);
+			if (v instanceof TextView)
+			{
+				TextView tab = (TextView) v;
+				tab.setTextColor(tabTextColor);
+			}
+		}
+	}
+
 	private void scrollToChild(int position, int offset) {
 
 		if (tabCount == 0) {
 			return;
 		}
 
-		int newScrollX = tabsContainer.getChildAt(position).getLeft() + offset;
+		int newScrollX = (tabsContainer.getChildAt(position).getLeft() +
+					tabsContainer.getChildAt(position).getRight()) / 2 + offset;
+		if (position == 0)
+		{
+			newScrollX = tabsContainer.getChildAt(position).getLeft() + offset;
+		}
+
+		int tabWidth = 0;
 
 		if (position > 0 || offset > 0) {
-			newScrollX -= scrollOffset;
+			int currentLeft = tabsContainer.getChildAt(position).getLeft();
+			int currentRight = tabsContainer.getChildAt(position).getRight();
+			int nextLeft = currentLeft;
+			int nextRight = currentRight;
+			if (tabsContainer.getChildAt(position + 1) != null)
+			{
+				nextLeft = tabsContainer.getChildAt(position + 1).getLeft();
+				nextRight = tabsContainer.getChildAt(position + 1).getRight();
+			}
+
+			double currentWidth = currentRight - currentLeft;
+			tabWidth = (int) currentWidth;
+			double nextWidth = nextRight - nextLeft;
+			double widthChange = nextWidth - currentWidth;
+
+			double extraOffset = Math.ceil((widthChange * (offset / currentWidth)) / 2.0);
+			newScrollX -= scrollOffset - extraOffset;
 		}
 
 		if (newScrollX != lastScrollX) {
@@ -302,6 +340,48 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 			scrollTo(newScrollX, 0);
 		}
 
+		// Color selected textview
+		View v = tabsContainer.getChildAt(position);
+
+		if (v instanceof TextView)
+		{
+			TextView tab = (TextView) v;
+			if (offset < (tabWidth / 2) || tabWidth == 0)
+			{
+				tab.setTextColor(selectedTabTextColor);
+			}
+			else
+			{
+				tab.setTextColor(tabTextColor);
+			}
+		}
+
+//		if (position > 0)
+//		{
+//			v = tabsContainer.getChildAt(position - 1);
+//			if (v instanceof TextView)
+//			{
+//				TextView tab = (TextView) v;
+//				tab.setTextColor(tabTextColor);
+//			}
+//		}
+
+		if (position < tabsContainer.getChildCount() - 1)
+		{
+			v = tabsContainer.getChildAt(position + 1);
+			if (v instanceof TextView)
+			{
+				TextView tab = (TextView) v;
+				if (offset < (tabWidth / 2) || tabWidth == 0)
+				{
+					tab.setTextColor(tabTextColor);
+				}
+				else
+				{
+					tab.setTextColor(selectedTabTextColor);
+				}
+			}
+		}
 	}
 
 	@Override
@@ -330,8 +410,8 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 			final float nextTabLeft = nextTab.getLeft();
 			final float nextTabRight = nextTab.getRight();
 
-			lineLeft = (currentPositionOffset * nextTabLeft + (1f - currentPositionOffset) * lineLeft);
-			lineRight = (currentPositionOffset * nextTabRight + (1f - currentPositionOffset) * lineRight);
+			lineLeft = (float) Math.floor((currentPositionOffset * nextTabLeft + (1f - currentPositionOffset) * lineLeft));
+			lineRight = (float) Math.floor((currentPositionOffset * nextTabRight + (1f - currentPositionOffset) * lineRight));
 		}
 
 		canvas.drawRect(lineLeft, height - indicatorHeight, lineRight, height, rectPaint);
@@ -343,11 +423,11 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
 		// draw divider
 
-		dividerPaint.setColor(dividerColor);
-		for (int i = 0; i < tabCount - 1; i++) {
-			View tab = tabsContainer.getChildAt(i);
-			canvas.drawLine(tab.getRight(), dividerPadding, tab.getRight(), height - dividerPadding, dividerPaint);
-		}
+//		dividerPaint.setColor(dividerColor);
+//		for (int i = 0; i < tabCount - 1; i++) {
+//			View tab = tabsContainer.getChildAt(i);
+//			canvas.drawLine(tab.getRight(), dividerPadding, tab.getRight(), height - dividerPadding, dividerPaint);
+//		}
 	}
 
 	private class PageListener implements OnPageChangeListener {
@@ -493,6 +573,11 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
 	public void setTextColor(int textColor) {
 		this.tabTextColor = textColor;
+		updateTabStyles();
+	}
+
+	public void setTextColorResource(int resId) {
+		this.tabTextColor = getResources().getColor(resId);
 		updateTabStyles();
 	}
 
