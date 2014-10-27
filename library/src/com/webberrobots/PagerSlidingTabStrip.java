@@ -42,7 +42,7 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
-import com.webberrobots.PagerSlidingTabStrip.R;
+import com.webberrobots.pagerslidingtabstrip.R;
 
 public class PagerSlidingTabStrip extends HorizontalScrollView {
 
@@ -573,11 +573,6 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
 	public void setTextColor(int textColor) {
 		this.tabTextColor = textColor;
-		updateTabStyles();
-	}
-
-	public void setTextColorResource(int resId) {
-		this.tabTextColor = getResources().getColor(resId);
 		updateTabStyles();
 	}
 

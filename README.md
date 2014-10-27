@@ -3,7 +3,7 @@
 Interactive paging indicator widget, compatible with the `ViewPager` from the 
 Android Support Library. 
 
-Try out the sample application [on the Play Store](https://play.google.com/store/apps/details?id=com.astuetz.viewpager.extensions.sample).
+Try out the sample application [on the Play Store](https://play.google.com/store/apps/details?id=com.webberrobots.viewpager.extensions.sample).
 
 ![PagerSlidingTabStrip Sample Screenshot 1](https://lh3.ggpht.com/PXS7EmHhQZdT1Oa379iy91HX3ByWAQnFZAthMAFa_QHAOHNClEaXU5nxDEAj1F2eqbk)![PagerSlidingTabStrip Sample Screenshot 2](https://lh3.ggpht.com/oaksDoUcQlGB4j7VEkBCOjrvSzjtzVHHcKq8pAnGVfm6oxkcJg_w1QS4tyP3fLcqrwcX)
 
@@ -14,13 +14,13 @@ Try out the sample application [on the Play Store](https://play.google.com/store
   1. Include the library as local library project or add the dependency in your build.gradle.
         
         dependencies {
-            compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
+            compile 'com.webberrobots:pagerslidingtabstrip:1.0.1'
         }
 
   2. Include the PagerSlidingTabStrip widget in your layout. This should usually be placed
      above the `ViewPager` it represents.
 
-        <com.astuetz.PagerSlidingTabStrip
+        <com.webberrobots.PagerSlidingTabStrip
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="48dip" />
@@ -65,12 +65,12 @@ your brand:
 
 ### Current Version: 1.0.1
 
-### [1.0.1](https://github.com/astuetz/PagerSlidingTabStrip/tree/v1.0.1)
+### [1.0.1](https://github.com/wynalazca/PagerSlidingTabStrip/tree/v1.0.1)
 
  * Upgraded gradle build files
- * Changed package name to `com.astuetz.PagerSlidingTabStrip`
- * [#37](https://github.com/astuetz/PagerSlidingTabStrip/pull/37), [#41](https://github.com/astuetz/PagerSlidingTabStrip/pull/41) Added `psts` prefix to all attributes in `attrs.xml`
- * [#46](https://github.com/astuetz/PagerSlidingTabStrip/pull/46) Changed the shouldExpand behavior to set the layout at the time the tab is added
+ * Changed package name to `com.webberrobots.PagerSlidingTabStrip`
+ * [#37](https://github.com/wynalazca/PagerSlidingTabStrip/pull/37), [#41](https://github.com/wynalazca/PagerSlidingTabStrip/pull/41) Added `psts` prefix to all attributes in `attrs.xml`
+ * [#46](https://github.com/wynalazca/PagerSlidingTabStrip/pull/46) Changed the shouldExpand behavior to set the layout at the time the tab is added
 
 # Developed By
 
