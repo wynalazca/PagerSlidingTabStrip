@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.astuetz.viewpager.extensions.sample;
+package com.webberrobots.viewpager.extensions.sample;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

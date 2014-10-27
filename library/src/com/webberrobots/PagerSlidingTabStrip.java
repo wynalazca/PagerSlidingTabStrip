@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.astuetz;
+package com.webberrobots;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -42,7 +42,7 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
-import com.astuetz.pagerslidingtabstrip.R;
+import com.webberrobots.PagerSlidingTabStrip.R;
 
 public class PagerSlidingTabStrip extends HorizontalScrollView {
 
@@ -121,7 +121,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
 		DisplayMetrics dm = getResources().getDisplayMetrics();
 
-		scrollOffset = dm.widthPixels / 2
+		scrollOffset = dm.widthPixels / 2;
 		indicatorHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, indicatorHeight, dm);
 		underlineHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, underlineHeight, dm);
 		dividerPadding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dividerPadding, dm);
