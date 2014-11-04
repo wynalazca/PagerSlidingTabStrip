@@ -300,14 +300,16 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 		}
 	}
 
-	private void scrollToChild(int position, int offset) {
+	private void scrollToChild(int position, int offset)
+	{
 
-		if (tabCount == 0) {
+		if (tabCount == 0)
+		{
 			return;
 		}
 
 		int newScrollX = (tabsContainer.getChildAt(position).getLeft() +
-					tabsContainer.getChildAt(position).getRight()) / 2 + offset;
+				tabsContainer.getChildAt(position).getRight()) / 2 + offset;
 		if (position == 0)
 		{
 			newScrollX = tabsContainer.getChildAt(position).getLeft() + offset;
@@ -315,7 +317,8 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
 		int tabWidth = 0;
 
-		if (position > 0 || offset > 0) {
+		if (position > 0 || offset > 0)
+		{
 			int currentLeft = tabsContainer.getChildAt(position).getLeft();
 			int currentRight = tabsContainer.getChildAt(position).getRight();
 			int nextLeft = currentLeft;
@@ -335,50 +338,27 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 			newScrollX -= scrollOffset - extraOffset;
 		}
 
-		if (newScrollX != lastScrollX) {
+		if (newScrollX != lastScrollX)
+		{
 			lastScrollX = newScrollX;
 			scrollTo(newScrollX, 0);
 		}
 
 		// Color selected textview
-		View v = tabsContainer.getChildAt(position);
-
-		if (v instanceof TextView)
+		for (int i = 0; i < tabsContainer.getChildCount(); i++)
 		{
-			TextView tab = (TextView) v;
-			if (offset < (tabWidth / 2) || tabWidth == 0)
-			{
-				tab.setTextColor(selectedTabTextColor);
-			}
-			else
-			{
-				tab.setTextColor(tabTextColor);
-			}
-		}
-
-//		if (position > 0)
-//		{
-//			v = tabsContainer.getChildAt(position - 1);
-//			if (v instanceof TextView)
-//			{
-//				TextView tab = (TextView) v;
-//				tab.setTextColor(tabTextColor);
-//			}
-//		}
-
-		if (position < tabsContainer.getChildCount() - 1)
-		{
-			v = tabsContainer.getChildAt(position + 1);
+			View v = tabsContainer.getChildAt(i);
 			if (v instanceof TextView)
 			{
 				TextView tab = (TextView) v;
-				if (offset < (tabWidth / 2) || tabWidth == 0)
+				if (((offset < (tabWidth / 2) || tabWidth == 0) && position == i) ||
+						(offset > (tabWidth / 2) && position + 1 == i))
 				{
-					tab.setTextColor(tabTextColor);
+					tab.setTextColor(selectedTabTextColor);
 				}
 				else
 				{
-					tab.setTextColor(selectedTabTextColor);
+					tab.setTextColor(tabTextColor);
 				}
 			}
 		}
@@ -583,6 +563,12 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
 	public int getTextColor() {
 		return tabTextColor;
+	}
+
+	public void setSelectedTabTextColor(int color)
+	{
+		this.selectedTabTextColor = color;
+		updateTabStyles();
 	}
 
 	public void setTypeface(Typeface typeface, int style) {
